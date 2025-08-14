@@ -1,75 +1,93 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { FlatList, Image, StyleSheet, View } from 'react-native';
+
+const mockFeed = [
+  {
+    id: '1',
+    user: 'Jordan Spieth',
+    avatar: require('@/assets/images/icon.png'),
+    course: 'Pebble Beach',
+    date: '2024-06-01',
+    score: 78,
+    type: 'round',
+  },
+  {
+    id: '2',
+    user: 'Rory McIlroy',
+    avatar: require('@/assets/images/icon.png'),
+    course: 'St. Andrews',
+    date: '2024-05-28',
+    score: 70,
+    type: 'round',
+  },
+  {
+    id: '3',
+    user: 'Nelly Korda',
+    avatar: require('@/assets/images/icon.png'),
+    course: 'Augusta National',
+    date: '2024-05-27',
+    score: 74,
+    type: 'round',
+  },
+];
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ThemedView style={styles.container}>
+      <ThemedText type="title">Activity Feed</ThemedText>
+      <FlatList
+        data={mockFeed}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.feedCard}>
+            <View style={styles.feedHeader}>
+              <Image source={item.avatar} style={styles.avatar} />
+              <View>
+                <ThemedText type="subtitle">{item.user}</ThemedText>
+                <ThemedText>{item.date}</ThemedText>
+              </View>
+            </View>
+            <ThemedText>
+              Played <ThemedText type="defaultSemiBold">{item.course}</ThemedText> — Score: <ThemedText type="defaultSemiBold">{item.score}</ThemedText>
+            </ThemedText>
+          </View>
+        )}
+        style={styles.list}
+      />
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: 'transparent',
+  },
+  list: {
+    marginVertical: 16,
+  },
+  feedCard: {
+    backgroundColor: '#f2f2f2',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  feedHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
     marginBottom: 8,
+    gap: 12,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 12,
   },
 });
